@@ -1,0 +1,5 @@
+{
+  "name": "Account Master",
+  "description": "A colorful and robust mobile-first accounting application to track receipts and expenditures, view summaries, and generate detailed PDF/Excel reports with carried-forward balances.",
+  "requestFramePermissions": []
+}
