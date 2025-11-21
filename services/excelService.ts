@@ -34,18 +34,16 @@ export const downloadExcel = (
   });
   data.push({}); // Spacer
 
-  // Custom Header Row
+  // Custom Header Row - UPDATED ORDER: Date, Party, Particulars, Amount
   data.push({
     "C_Date": "Date",
-    "C_Purpose": "Purpose",
-    "C_Labels": "Labels",
     "C_Party": "Received From",
+    "C_Particulars": "Particulars",
     "C_Amount": `Amount (${CURRENCY_SYMBOL})`,
     "SEP": "|",
     "D_Date": "Date",
-    "D_Purpose": "Purpose",
-    "D_Labels": "Labels",
     "D_Party": "Paid To",
+    "D_Particulars": "Particulars",
     "D_Amount": `Amount (${CURRENCY_SYMBOL})`
   });
   
@@ -55,15 +53,13 @@ export const downloadExcel = (
 
     data.push({
       "C_Date": r ? r.date : "",
-      "C_Purpose": r ? r.purpose : "",
-      "C_Labels": r ? r.labels : "",
       "C_Party": r ? r.party : "",
+      "C_Particulars": r ? r.particulars : "",
       "C_Amount": r ? r.amount : "",
       "SEP": "|",
       "D_Date": e ? e.date : "",
-      "D_Purpose": e ? e.purpose : "",
-      "D_Labels": e ? e.labels : "",
       "D_Party": e ? e.party : "",
+      "D_Particulars": e ? e.particulars : "",
       "D_Amount": e ? e.amount : ""
     });
   }

@@ -1,7 +1,9 @@
+
 export const APP_NAME = "Account Master";
 export const STORAGE_KEY = "account_master_transactions_v1";
 export const INITIAL_BALANCE_KEY = "account_master_initial_balance_v1";
 export const CURRENCY_SYMBOL = "₹";
+export const ITEMS_PER_PAGE = 10; // Reduced to 10 to allow rows to grow (text wrapping) without overflowing page
 
 export const COLORS = {
   receipt: {

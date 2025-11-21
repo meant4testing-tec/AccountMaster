@@ -18,9 +18,17 @@ export const saveTransaction = (transaction: Transaction): Transaction[] => {
   return updated;
 };
 
+export const updateTransaction = (transaction: Transaction): Transaction[] => {
+  const current = getTransactions();
+  const updated = current.map(t => t.id === transaction.id ? transaction : t);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  return updated;
+};
+
 export const deleteTransaction = (id: string): Transaction[] => {
   const current = getTransactions();
-  const updated = current.filter(t => t.id !== id);
+  // Robust comparison: Convert both to strings to ensure match regardless of stored type
+  const updated = current.filter(t => String(t.id) !== String(id));
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   return updated;
 };
