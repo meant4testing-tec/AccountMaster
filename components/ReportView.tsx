@@ -181,7 +181,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           page-break-after: avoid;
         }
         
-        .header { text-align: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 15px; width: 100%; }
+        .header { text-align: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 10px; width: 100%; position: relative; }
         .title { font-size: 28px; font-weight: 900; color: #312e81; text-transform: uppercase; letter-spacing: 1px; }
         .subtitle { font-size: 14px; color: #64748b; font-weight: 600; margin-top: 5px; }
         
@@ -208,10 +208,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
         .w-amt { width: 20%; text-align: right; font-weight: 700; }
         
         .footer-totals { margin-top: auto; border: 2px solid #cbd5e1; border-top: none; width: 100%; }
-        .footer-row { display: flex; font-size: 12px; padding: 10px; border-bottom: 1px solid #e2e8f0; }
+        .footer-row { display: flex; font-size: 12px; padding: 8px 10px; border-bottom: 1px solid #e2e8f0; }
         .total-label { font-weight: 800; text-transform: uppercase; color: #1e293b; }
         
-        .watermark { position: absolute; bottom: 15px; width: 100%; text-align: center; font-size: 10px; color: #94a3b8; left:0; }
+        /* New Placement for Powered By Edutor */
+        .powered-by { position: absolute; top: 20px; left: 40px; font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
         .page-no { position: absolute; top: 45px; right: 60px; font-size: 11px; color: #64748b; font-weight: 600; }
         
         .txt-green { color: #059669 !important; }
@@ -244,8 +245,13 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </div>
       ` : `<div class="tbl-row"><div class="cell" style="height:20px">&nbsp;</div></div>`).join('');
 
+      // Calculations for Footer Logic
+      const leftGrandTotal = page.openingBalanceBF + page.pageTotalReceipts;
+      const rightGrandTotal = page.pageTotalExpenditures + page.closingBalanceCF;
+
       htmlContent += `
         <div class="pdf-page">
+          <div class="powered-by">Powered by Edutor</div>
           <div class="page-no">Page ${page.pageNumber} of ${page.totalPages}</div>
           <div class="header">
             <h1 class="title">Account Master Report</h1>
@@ -279,7 +285,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </div>
           </div>
           <div class="footer-totals">
-            <div class="footer-row bg-gray-50" style="background: #f8fafc !important;">
+            <!-- Row 1: Page Totals -->
+            <div class="footer-row" style="background: #f8fafc !important;">
               <div style="width:50%; display:flex; justify-content:space-between; padding-right:10px; border-right:2px solid #cbd5e1">
                  <span class="total-label">Page Total Receipts</span>
                  <span class="font-bold txt-green">${formatCurrency(page.pageTotalReceipts)}</span>
@@ -289,18 +296,31 @@ export const ReportView: React.FC<ReportViewProps> = ({
                  <span class="font-bold txt-red">${formatCurrency(page.pageTotalExpenditures)}</span>
               </div>
             </div>
-            <div class="footer-row" style="background: #f1f5f9 !important; border-top: 1px solid #cbd5e1;">
+            
+            <!-- Row 2: Intermediate Totals (B/F + Page) & C/F -->
+            <div class="footer-row" style="background: #fff !important; border-bottom: none; padding-top: 4px; padding-bottom: 4px;">
+               <div style="width:50%; display:flex; justify-content:space-between; padding-right:10px; border-right:2px solid #cbd5e1">
+                 <span class="total-label" style="color: #64748b;">Total (B/F + PAGE)</span>
+                 <span class="font-bold" style="color: #312e81;">${formatCurrency(leftGrandTotal)}</span>
+               </div>
+               <div style="width:50%; display:flex; justify-content:space-between; padding-left:10px;">
+                 <span class="total-label" style="color: #64748b;">Carried Forward (C/F)</span>
+                 <span class="font-bold" style="color: #312e81;">${formatCurrency(page.closingBalanceCF)}</span>
+               </div>
+            </div>
+
+            <!-- Row 3: Grand Total (Balanced) -->
+            <div class="footer-row" style="background: #f1f5f9 !important; border-top: 1px solid #cbd5e1; border-bottom:none;">
               <div style="width:50%; display:flex; justify-content:space-between; padding-right:10px; border-right:2px solid #cbd5e1">
-                 <span class="total-label">Total (B/F + Page)</span>
-                 <span class="font-bold">${formatCurrency(page.openingBalanceBF + page.pageTotalReceipts)}</span>
+                 <span class="total-label">Grand Total</span>
+                 <span class="font-bold text-slate-800">${formatCurrency(leftGrandTotal)}</span>
               </div>
               <div style="width:50%; display:flex; justify-content:space-between; padding-left:10px;">
-                 <span class="total-label">Carried Forward (C/F)</span>
-                 <span class="font-bold" style="color: #312e81 !important;">${formatCurrency(page.closingBalanceCF)}</span>
+                 <span class="total-label">Grand Total</span>
+                 <span class="font-bold text-slate-800">${formatCurrency(rightGrandTotal)}</span>
               </div>
             </div>
           </div>
-          <div class="watermark">Powered by Edutor</div>
         </div>
       `;
     });
